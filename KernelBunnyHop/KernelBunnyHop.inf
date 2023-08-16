@@ -1,0 +1,77 @@
+;
+; KernelBunnyHop.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System ; TODO: specify appropriate Class
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=KernelBunnyHop.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+KernelBunnyHop_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+KernelBunnyHop.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%KernelBunnyHop.DeviceDesc%=KernelBunnyHop_Device, Root\KernelBunnyHop ; TODO: edit hw-id
+
+[KernelBunnyHop_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+KernelBunnyHop.sys
+
+;-------------- Service installation
+[KernelBunnyHop_Device.NT.Services]
+AddService = KernelBunnyHop,%SPSVCINST_ASSOCSERVICE%, KernelBunnyHop_Service_Inst
+
+; -------------- KernelBunnyHop driver install sections
+[KernelBunnyHop_Service_Inst]
+DisplayName    = %KernelBunnyHop.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\KernelBunnyHop.sys
+
+;
+;--- KernelBunnyHop_Device Coinstaller installation ------
+;
+
+[KernelBunnyHop_Device.NT.CoInstallers]
+AddReg=KernelBunnyHop_Device_CoInstaller_AddReg
+CopyFiles=KernelBunnyHop_Device_CoInstaller_CopyFiles
+
+[KernelBunnyHop_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[KernelBunnyHop_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[KernelBunnyHop_Device.NT.Wdf]
+KmdfService =  KernelBunnyHop, KernelBunnyHop_wdfsect
+[KernelBunnyHop_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "KernelBunnyHop Installation Disk"
+KernelBunnyHop.DeviceDesc = "KernelBunnyHop Device"
+KernelBunnyHop.SVCDESC = "KernelBunnyHop Service"
