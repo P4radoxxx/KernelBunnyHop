@@ -16,7 +16,7 @@
 // A headers for all CSGO offsets.
 // User mode app who will send the control codes is still not coded, but that should be fast enough.
 
-#pragma warning (disable : 4100 4024 4047 4142) // Ca ce compile, mais vu que c'est un driver ce serais mieux de virer les warnings au lieu de les ignorer.
+                       // Ca ce compile, mais vu que c'est un driver ce serais mieux de virer les warnings au lieu de les ignorer.
                                                // *** Driver compilation is working fine, but since it's a kernel driver it would be better to fix all warnings
 											   // instead of ignoring them :3
 
@@ -28,18 +28,21 @@
 #include "driverEvents.h"
 #include "data.h"
 #include "driverComms.h"
-
+#pragma warning(disable: 4142 4047)
 
 //Point d'entrée du driver(main) *** Driver entry point.
 NTSTATUS DriverEntry(PDRIVER_OBJECT ptrDriverObject, PUNICODE_STRING ptrRegistryPath)
 {
+	(void)ptrDriverObject;
+	(void)ptrRegistryPath;
 	ptrDriverObject->DriverUnload = driverUnload;
 	
 	message("RAWR ! I'm a kernel dinosaure !");
 
 	// Fonction qui va notifier le driver chaque fois qu'un module specifique est chargé en mémoire.
 	// *** Function to notify the driver that the module we are looking for has been loaded into memory.
-	PsSetLoadImageNotifyRoutine(imgCallBack);
+	PsSetLoadImageNotifyRoutine((PLOAD_IMAGE_NOTIFY_ROUTINE)imgCallBack);
+
 	
 
 	// In lack of a better name :D
@@ -87,7 +90,8 @@ NTSTATUS driverUnload(PDRIVER_OBJECT ptrDriverObject)
 {
     message("Driver unloaded succesfully ! Goodbye!"); // devrais être à la fin, une fois les checks passé voir si il a bien été dechargé.
 	                                                   // *** Should be at the end, when all the checks for unloading are cleared.
-	PsRemoveLoadImageNotifyRoutine(imgCallBack);
+	PsSetLoadImageNotifyRoutine((PLOAD_IMAGE_NOTIFY_ROUTINE)imgCallBack);
+
 
 	IoDeleteSymbolicLink(&dos);
 	IoDeleteDevice(ptrDriverObject->DeviceObject);
