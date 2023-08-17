@@ -90,7 +90,6 @@ NTSTATUS driverUnload(PDRIVER_OBJECT ptrDriverObject)
 {
     message("Driver unloaded succesfully ! Goodbye!"); // devrais être à la fin, une fois les checks passé voir si il a bien été dechargé.
 	                                                   // *** Should be at the end, when all the checks for unloading are cleared.
-	PsSetLoadImageNotifyRoutine((PLOAD_IMAGE_NOTIFY_ROUTINE)imgCallBack);
 
 
 	IoDeleteSymbolicLink(&dos);
