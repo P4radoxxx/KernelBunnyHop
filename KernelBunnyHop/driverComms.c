@@ -24,11 +24,20 @@ Call(PDEVICE_OBJECT deviceObj, PIRP irp)
 
 
 
-closeCall(PDEVICE_OBJECT deviceObj, PIRP irp)
+CloseCall(PDEVICE_OBJECT deviceObj, PIRP irp)
 {
 
 	UNREFERENCED_PARAMETER(deviceObj);
 	
+	// Check qui va verifier si une requête IRQ est en cours et l'annuler si c'est le cas, fix pour le BSOD  DRIVER_UNLOAD_WITH_PENDING_OPERATIONS
+	// quand je decharge le driver.
+	KIRQL irql = KeGetCurrentIrql();
+	if (irql <= DISPATCH_LEVEL) 
+	
+	{
+		IoReleaseCancelSpinLock(irp->CancelIrql);
+	}
+
 	irp->IoStatus.Status = STATUS_SUCCESS;
 	irp->IoStatus.Information = 0;
 

@@ -5,7 +5,7 @@
 
 #pragma warning(disable: 4142 4047)
 
-// Cette partie du code gêre les fonctions a executer selon le control code reçu
+// Cette partie du code gêre les fonctions a executer selon le control code reçu, juste la fonction de test for now...
 // This part will handle all functions called by a control code
 
 PLOAD_IMAGE_NOTIFY_ROUTINE imgCallBack(PUNICODE_STRING imgName, HANDLE processId, PIMAGE_INFO imgInfo)

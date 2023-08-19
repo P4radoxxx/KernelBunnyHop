@@ -8,5 +8,5 @@ NTSTATUS IOControl(PDEVICE_OBJECT deviceObj, PIRP irp);
 
 NTSTATUS Call(PDEVICE_OBJECT deviceObj, PIRP irp);
 
-NTSTATUS closeCall(PDEVICE_OBJECT deviceObj, PIRP irp);
+NTSTATUS CloseCall(PDEVICE_OBJECT deviceObj, PIRP irp);
 
