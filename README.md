@@ -12,7 +12,7 @@ a lot i'm gonna think of later...
 
 
 Tuto : 
-1. Compiler le driver avec Visual Studio, vous aurez besoin du DDK (Driver Dev Kit) et du SDK de Windows pour ça.
+1. Compiler le driver avec Visual Studio, vous aurez besoin du WDK (Driver Dev Kit) et du SDK de Windows pour ça.
 2. Trouvez vous GDRVLoader ( Le driver n'est pas signé ), et chargé le.
 3. Bootez le controleur qui enverra automatiquement les control codes au driver et desactivera l'effet de la grenade flash.
 
