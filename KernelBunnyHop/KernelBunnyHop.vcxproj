@@ -120,12 +120,14 @@
     <ClInclude Include="driverComms.h" />
     <ClInclude Include="driverEvents.h" />
     <ClInclude Include="data.h" />
+    <ClInclude Include="memoryManagement.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugMessages.c" />
     <ClCompile Include="driverBase.c" />
     <ClCompile Include="driverComms.c" />
     <ClCompile Include="driverEvents.c" />
+    <ClCompile Include="memoryManagement.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

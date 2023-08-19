@@ -39,6 +39,9 @@
     <ClInclude Include="driverComms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="memoryManagement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="driverBase.c">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="driverComms.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="memoryManagement.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

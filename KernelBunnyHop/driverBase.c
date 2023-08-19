@@ -146,6 +146,5 @@ NTSTATUS driverUnload(PDRIVER_OBJECT ptrDriverObject)
 	}
 
 
-	IoCancelIrp();
 	return STATUS_SUCCESS;
 }

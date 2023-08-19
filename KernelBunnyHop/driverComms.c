@@ -1,8 +1,9 @@
 #include "driverComms.h"
 #include "DebugMessages.h"
 #include "data.h"
+#include "memoryManagement.h"
 
-#pragma warning(disable: 4142 4047)
+#pragma warning(disable: 4142 4047 4022)
 
 
 Call(PDEVICE_OBJECT deviceObj, PIRP irp)
@@ -62,17 +63,68 @@ IOControl(PDEVICE_OBJECT deviceObj, PIRP irp)
 	PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(irp);
 	ULONG controlCode = stack->Parameters.DeviceIoControl.IoControlCode;
 
-	// Premier control code custom, cast l'adresse du module dans le pointeur output pour ensuite l'assigner a dllAddress.
-	// First custom control code. Cast the address of the module to a pointer, then assign it to dllAddress var
+
+
+	// Custom control codes logic
 	if (controlCode == GET_CLIENT_ADDRESS)
 	{
 		message("Test control code received! Getting module address now...\n");
 		PULONG_PTR output = (PULONG_PTR)irp->AssociatedIrp.SystemBuffer;
-		*output = (ULONG_PTR)dllAddress;
+		*output = (ULONG_PTR)CSGODllAddress;
 
 		dataFlowControl = STATUS_SUCCESS;
 		bytesIO = sizeof(*output);
 	}
+
+
+	else if (controlCode == IO_READ)
+	{
+		PKERNEL_READ_REQUEST readMemory = (PKERNEL_READ_REQUEST)irp->AssociatedIrp.SystemBuffer;
+		PEPROCESS process;
+
+		if (NT_SUCCESS(PsLookupProcessByProcessId(readMemory->processID, &process)))
+		{
+			// Vu qu'on va lire la valeur retournée depuis le controller en user mode, l'adresse de stockage est le buffer puis le controller recuperera l'adresse du buffer et son contenu.
+		    KernelReadVirtualMemory(process, readMemory->address, readMemory->pBuffer, readMemory->size);
+			dataFlowControl = STATUS_SUCCESS;
+			bytesIO = sizeof(KERNEL_READ_REQUEST);
+		}
+	}
+
+
+	else if (controlCode == IO_WRITE)
+	{
+		PKERNEL_WRITE_REQUEST writeMemory = (PKERNEL_WRITE_REQUEST)irp->AssociatedIrp.SystemBuffer;
+		PEPROCESS process;
+
+		if (NT_SUCCESS(PsLookupProcessByProcessId(writeMemory->processID, &process)))
+		{
+	
+	     	KernelWriteVirtualMemory(process, writeMemory->pBuffer, writeMemory->address, writeMemory->size);
+			dataFlowControl = STATUS_SUCCESS;
+			bytesIO = sizeof(KERNEL_READ_REQUEST);
+		}
+
+
+	}
+
+
+	else if (controlCode == IO_REQUEST_PROCID)
+	{
+		
+
+		PULONG output = (PULONG)irp->AssociatedIrp.SystemBuffer;
+		*output = processID;
+
+		message("Control code received, getting process ID...");
+
+		dataFlowControl = STATUS_SUCCESS;
+		bytesIO = sizeof(*output);
+
+
+
+	}
+
 
 
 
@@ -81,7 +133,7 @@ IOControl(PDEVICE_OBJECT deviceObj, PIRP irp)
 
 	else
 	{
-		bytesIO = 0;
+		bytesIO = NULL;
 	}
 
 

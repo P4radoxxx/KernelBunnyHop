@@ -131,6 +131,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="comms.hpp" />
+    <ClInclude Include="GameOffsets.hpp" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="KernelInterface.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
